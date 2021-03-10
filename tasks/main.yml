@@ -1,0 +1,32 @@
+---
+- name: Install bash-completion package
+  apt:
+    name: bash-completion
+
+- name: Download kubectl binary
+  get_url:
+    url: "{{ kubectl_binary_url }}"
+    dest: "/tmp/kubectl_{{ kubectl_version }}"
+    force: no
+
+- name: Move kubectl binary to /usr/local/bin
+  ansible.builtin.copy:
+    src: "/tmp/kubectl_{{ kubectl_version }}"
+    dest: /usr/local/bin/kubectl
+    remote_src: yes
+    owner: root
+    group: root
+    mode: 0755
+    force: no
+
+- name: Insert bash completion in bashrc file
+  ansible.builtin.lineinfile:
+    path: "/home/{{ item }}/.bashrc"
+    insertafter: EOF
+    line: source <(kubectl completion bash)
+  loop: "{{ kubectl_bashrc_user }}"
+
+- name: kubectl completion bash >/etc/bash_completion.d/kubectl
+  ansible.builtin.shell:
+    cmd: kubectl completion bash >/etc/bash_completion.d/kubectl
+    creates: /etc/bash_completion.d/kubectl

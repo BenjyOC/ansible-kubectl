@@ -1,0 +1,7 @@
+---
+default_architecture: arm64
+kubectl_version: v1.20.4
+kubectl_binary_url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/{{ default_architecture }}/kubectl"
+kubectl_checksum_url: "https://dl.k8s.io/{{ kubectl_version }}/bin/linux/{{ default_architecture }}/kubectl.sha256"
+kubectl_bashrc_user:
+  - ubuntu
